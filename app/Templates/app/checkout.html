@@ -1,0 +1,127 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content_checkout %}
+<style>
+   
+  .input-wrapper input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+</style>
+
+
+<div class="container">
+  <div class="py-5 text-center">
+    <h1 class="mb-3 fs-1 text-center">Thông tin thanh toán</h1>
+    <p class="lead"></p>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Giỏ hàng</span>
+        <span class="badge badge-secondary badge-pill">{{ cartItems }}</span>
+      </h4>
+      <ul class="list-group mb-3">
+        {% for item in items %}
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">{{ item.product.name }}</h6>
+            <small class="text-muted">{{ item.product.category.first }}</small>
+          </div>
+          <span class="text-muted">{{ item.get_total }} VND</span>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between bg-light">
+          <div class="text-primary">
+            <h6 class="my-0 fs-3">Tổng giá</h6>
+          </div>
+          <span class="text-primary fs-3">{{ order.get_cart_total }} VNĐ</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3 fs-3 text-primary ">Địa chỉ thanh toán</h4>
+      <form class="needs-validation" method="POST" action="{% url 'checkout' %}">
+        {% csrf_token %}
+
+
+        <div class="form-row form-control bg-light fs-4">
+          <label for="id_mobile">Số điện thoại</label>
+          <div class="input-wrapper">
+            {{ form.mobile }}
+          </div>
+        </div>
+
+        <br class="mb-4">
+        <div class="form-row form-control bg-light fs-4">
+          <label for="id_street_address">Địa chỉ</label>
+          <div class="input-wrapper">
+            {{ form.street_address }}
+          </div>
+        </div>
+
+        <br class="mb-4">
+        <div class="form-row form-control bg-light fs-4">
+          <label for="id_city">Quận (huyện)</label>
+          <div class="input-wrapper">
+            {{ form.city }}
+          </div>
+        </div>
+
+        <br class="mb-4">
+        <div class="form-row form-control bg-light fs-4">
+          <label for="id_city">Tỉnh (thành phố)</label>
+          <div class="input-wrapper">
+            {{ form.state }}
+          </div>
+        </div>
+
+        <br class="mb-4">
+        <div class="form-row form-control bg-light fs-4">
+          <label for="id_note">Ghi chú</label>
+          <div class="input-wrapper">
+            {{ form.note }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="save-info" name="save_info" {% if form.save_info.value %}checked{% endif %}>
+            <label class="custom-control-label" for="save-info">Lưu thông tin này cho lần sau</label>
+        </div>
+        
+        
+        </div>
+        
+        
+        
+        <br class="mb-4">
+        <h3 class="mb-3">Thanh toán</h3>
+
+        <div class="d-block my-3">
+          {% for choice in form.payment_option %}
+          <div class="custom-control custom-radio">
+            {{ choice.tag }}
+            <label class="custom-control-label fs-5" for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+          </div>
+          {% endfor %}
+        </div>
+
+
+
+    
+      
+
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Hoàn tất thanh toán</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content_checkout %}
